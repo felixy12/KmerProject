@@ -1,6 +1,8 @@
 import numpy as np
-#import matplotlib.pyplot as plt
-#import pylab
+import matplotlib.pyplot as plt
+import pylab
+import prettyplotlib as ppl
+from prettyplotlib import brewer2mpl
 
 def calculateThresh(posArray, negArray):
     posArray = np.sort(posArray)
@@ -34,24 +36,44 @@ def writeVector(weightVector, fileName):
 
 def main():
     print('Reading in positive matrix')
-    pos_top_file = 'pos_top_sum_positive.out'
-    PTM = loadData(pos_top_file)
-    PTV = PTM.flatten()
+    pos_top_file = '../gm12878Data/position_weights_pos.out'
+    PWPM = loadData(pos_top_file)
     print('Reading in negative matrix')
-    neg_top_file = 'pos_top_sum_negative.out'
-    NTM = loadData(neg_top_file)
-    NTV = NTM.flatten()
-    print(len(PTV))
-    print(len(NTV))
-    #writeVector(PTV, 'positive_top_vector.out')
-    #writeVector(NTV, 'negative_top_vector.out')
+    neg_top_file = '../gm12878Data/position_weights_neg.out'
+    PWNM = loadData(neg_top_file)
+    
+    #Process that generates histograms of kmer weights
+    '''
+    PWPV = PWPM.flatten()
+    PWNV = PWNM.flatten()
     plt.figure(1)
     plt.subplot(211)
-    plt.hist(PTV,range=(0,100))
+    plt.hist(PWPV,range=(30,100))
     plt.subplot(212)
-    plt.hist(NTV,range=(0,100))
+    plt.hist(PWNV,range=(30,100))
     pylab.show()
-    #calculateThresh(PTV,NTV)
-    #writeVector(PTV, 'top_positive_vector.out')
-
+    '''
+    #Process that generates histograms of sequence weights
+    pos_seq_weights = np.sum(PWPM,1)
+    neg_seq_weights = np.sum(PWNM,1)
+    pos_hist = np.histogram(pos_seq_weights, np.linspace(-5000, 10000, 1000))[0]
+    pos_hist = pos_hist.astype('f')
+    print(pos_hist)
+    neg_hist = np.histogram(neg_seq_weights, np.linspace(-5000, 10000, 1000))[0]
+    neg_hist = neg_hist.astype('f')
+    print(neg_hist)
+    print(pos_hist.shape)
+    overlap = np.minimum(pos_hist, neg_hist)
+    print('overlap done')
+    overlap = np.sum(overlap)
+    fraction_overlap = overlap/len(pos_seq_weights)
+    fraction_overlap = fraction_overlap - fraction_overlap%0.0001
+    print(fraction_overlap)
+    plt.figure(1)
+    plt.hist(pos_seq_weights, bins=100, alpha = 0.5, label = 'positive sequence weights')
+    plt.hist(neg_seq_weights, bins=100, alpha = 0.5, label = 'negative sequence weights')
+    plt.text(3000, 500, "Fraction Overlap: "+str(fraction_overlap))
+    plt.legend(loc='upper right')
+    pylab.show()
+    
 main()
