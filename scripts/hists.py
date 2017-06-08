@@ -36,10 +36,10 @@ def writeVector(weightVector, fileName):
 
 def main():
     print('Reading in positive matrix')
-    pos_top_file = '../gm12878Data/position_weights_pos.out'
+    pos_top_file = '../gm12878Data/position_top_weights_pos.out'
     PWPM = loadData(pos_top_file)
     print('Reading in negative matrix')
-    neg_top_file = '../gm12878Data/position_weights_neg.out'
+    neg_top_file = '../gm12878Data/position_top_weights_neg.out'
     PWNM = loadData(neg_top_file)
     
     #Process that generates histograms of kmer weights
@@ -72,8 +72,9 @@ def main():
     plt.figure(1)
     plt.hist(pos_seq_weights, bins=100, alpha = 0.5, label = 'positive sequence weights')
     plt.hist(neg_seq_weights, bins=100, alpha = 0.5, label = 'negative sequence weights')
-    plt.text(3000, 500, "Fraction Overlap: "+str(fraction_overlap))
+    plt.text(2000, 500, "Fraction Overlap: "+str(fraction_overlap))
     plt.legend(loc='upper right')
+    plt.title('Sequence Weights (using top gkmers)')
     pylab.show()
     
 main()
