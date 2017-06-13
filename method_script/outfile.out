@@ -1,0 +1,31 @@
+Loading in sequences.
+Number of sequences loaded in: 22384
+Length of longest sequence: 300
+Loading in gkmer weights.
+Number of gkmers loaded in: 11573
+Creating Position Sum Matrix.
+Currently process sequence: 1000	 Time Elapsed: 192.13 seconds
+Currently process sequence: 2000	 Time Elapsed: 192.44 seconds
+Currently process sequence: 3000	 Time Elapsed: 192.49 seconds
+Currently process sequence: 4000	 Time Elapsed: 192.64 seconds
+Currently process sequence: 5000	 Time Elapsed: 192.48 seconds
+Currently process sequence: 6000	 Time Elapsed: 192.55 seconds
+Currently process sequence: 7000	 Time Elapsed: 192.59 seconds
+Currently process sequence: 8000	 Time Elapsed: 192.53 seconds
+Currently process sequence: 9000	 Time Elapsed: 192.37 seconds
+Currently process sequence: 10000	 Time Elapsed: 192.42 seconds
+Currently process sequence: 11000	 Time Elapsed: 192.47 seconds
+Currently process sequence: 12000	 Time Elapsed: 192.43 seconds
+Currently process sequence: 13000	 Time Elapsed: 192.48 seconds
+Currently process sequence: 14000	 Time Elapsed: 192.42 seconds
+Currently process sequence: 15000	 Time Elapsed: 192.43 seconds
+Currently process sequence: 16000	 Time Elapsed: 192.52 seconds
+Currently process sequence: 17000	 Time Elapsed: 192.39 seconds
+Currently process sequence: 18000	 Time Elapsed: 192.47 seconds
+Currently process sequence: 19000	 Time Elapsed: 192.48 seconds
+Currently process sequence: 20000	 Time Elapsed: 192.42 seconds
+Currently process sequence: 21000	 Time Elapsed: 192.46 seconds
+Currently process sequence: 22000	 Time Elapsed: 192.45 seconds
+Done generating. Total time elapsed to process 22384 sequences: 71 minutes 48 seconds
+Writing matrix to output file.
+Done writing. File can be found in ../data/gm12878Data//pos_top_sum_negative.out
