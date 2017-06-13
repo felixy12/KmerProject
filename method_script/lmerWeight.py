@@ -25,11 +25,16 @@ def generateLmer(lmerList, l):
 
 
 '''
+Uses gapped k-mer weights in order to calculate the weights for all possible l-mers,
+given values for k and l.
+
 Inputs
 subLength:			Length of the lmers that we are generating weights for.
 numGaps:			How many gaps are present for the gapped k-mers in the weights file.
-weightsFilePath:	String that gives pathing to the file that has the gapped k-mers
-					along with their associated weights.
+gkmerWeightsDict:	Dictionary that contains the gapped k-mers as keys, and their
+					appropriate weights as the values. The keys does not need to
+					exhaust all possible gapped k-mers, but only needs to contain the
+					ones deemed "important".
 verbose:			Boolean that denotes whether the method should print strings.
 
 Output
@@ -37,20 +42,7 @@ weightList			List of tuples with (l-mer, weight), where the weight for the l-mer
 					is the sum of the gapped k-mer weights that can be created by the
 					l-mer. The list is sorted in order of descending weight.
 '''
-def generateLmerWeights(subLength, numGaps, weightsFilePath, verbose):
-	if verbose:
-    	print("Loading in gkmer weights")
-    weightsFile = open(weightsFilePath)
-    gkmerWeightsDict = {}
-    for line in weightsFile:
-        splitLine = line.strip().split()
-        gkmer = splitLine[0]
-        weight = eval(splitLine[1])
-        gkmerWeightsDict[gkmer] = weight
-    weightsFile.close()
-    if verbose:
-    	print('Number of gkmers loaded in: ' + str(len(gkmerWeightsDict)))
-    
+def generateLmerWeights(subLength, numGaps, gkmerWeightsDict, verbose):
     lmerList = generateLmer([""], subLength)
     
     if verbose:

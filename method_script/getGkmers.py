@@ -3,16 +3,7 @@ import sys
 import time
 import numpy as np
 #To run, use >python getGkmer.py <length of subsequence> <number of non-gaps> <z-score threshold> <filename prefix (in this case, ctcf_1x_)> <path to directory with data> <flag>
-def main():
-    #setting up all necessary files and function parameters read in from command line.
-    subLength = int(sys.argv[1])
-    numGap = int(sys.argv[1]) - int(sys.argv[2])
-    zScore = float(sys.argv[3])
-    prefix = sys.argv[4]
-    directoryPath = sys.argv[5]+"/"
-    flag = eval(sys.argv[6])
-    seqFileName = directoryPath+prefix+"svseq.fa"
-    alphaFileName = directoryPath+prefix+"svalpha.out"
+def gkmerWeight(subLength, numGap, zScore, seqFilePath, alphaFilePath, positiveFlag, verbose):
         
     #variables used to analyze script runtime and size constraints.
     strLength = 0;
@@ -27,12 +18,12 @@ def main():
     #Meat of the script
     #This next line assumes the first line is a sequence position, and no header lines exist. If there are header lines, please remove them.
     numSeqs = numSeqs+1
-    print("Running getGkmer.py")
-    if(flag == 1):
+    print("Calculating gapped k-mer weights")
+    if(positiveFlag == 1):
         print("Flag has been set to only consider positive top weights.")
     print("Loading files.")
-    seqNameList, seqList = gkmerHelpers.loadFasta(seqFileName)
-    alphaList = gkmerHelpers.loadAlpha(alphaFileName)
+    seqNameList, seqList = gkmerHelpers.loadFasta(seqFilePath)
+    alphaList = gkmerHelpers.loadAlpha(alphaFilePath)
     print("Found " + str(len(seqNameList)) + " sequences to process.")
     print("Generating word weights.")
     for i in range(len(alphaList)):

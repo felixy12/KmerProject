@@ -4,6 +4,8 @@ import numpy as np
 import math
 
 '''
+Loads in data from a .fa file.
+
 Inputs
 fileName:	String containing the name of the fasta file
 
@@ -37,6 +39,8 @@ def loadFasta(fileName):
     return seqNameList, seqList
 
 '''
+Loads in support vector alpha values from file. 
+
 Inputs
 fileName:	String that contains the name of the svalpha file
 
@@ -58,6 +62,9 @@ def loadAlpha(fileName):
     return alphaList
 
 '''
+Creates the reverse complement of a given DNA sequence. If a gapped sequence is given,
+the gaps are ignored (they stay as gaps).
+
 Inputs
 seq:		A string containing the DNA sequence
 
@@ -75,6 +82,8 @@ def complement(seq):
     return seq
 
 '''
+Generates a list of gapped k-mers from a given sequence.
+
 Inputs
 seq:		String that contains the sequence to be processed into gkmers
 subLength:	Length of the l-mers that the sequence will be broken down into
@@ -101,6 +110,8 @@ def gkmers(seq, subLength, numGap):
     return gappedList
 
 '''
+Calculates the contribution from a given sequence to the weight of the gapped k-mers.
+
 Inputs
 seq:		String that contains the sequence to be processed into gkmers
 subLength:	Length of the l-mers that the sequence will be broken down into
@@ -134,6 +145,10 @@ def gkmerWeightFromSeq(seq, subLength, numGap, alpha):
     return countDict
 
 '''
+Counts the number of times an important gapped k-mer appears in a sequence. Essentially
+creates the feature vector for a sequence, where each feature is the number of times
+a certain gapped k-mer appears in the sequence.
+
 Inputs
 seq:			String that contains the sequence to be processed into gkmers
 subLength:		Length of the l-mers that the sequence will be broken down into
