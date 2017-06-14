@@ -62,6 +62,32 @@ def loadAlpha(fileName):
     return alphaList
 
 '''
+Loads in a dictionary with gapped k-mers as keys, and weights (or index position)
+as the values.
+
+Inputs
+fileName:	Path that leads to the file with the gapped k-mers and weights.
+useIndices:	Boolean. If TRUE, index position will be loaded in as values instead
+			of the weights. Indices will be assigned based on order in which they
+			appear in the file.
+'''
+def loadGkmerWeights(fileName, useIndices):
+    weightsFile = open(fileName)
+    gkmerDict = {}
+	index = 0
+    for line in weightsFile:
+        splitLine = line.strip().split()
+        gkmer = splitLine[0]
+        weight = eval(splitLine[1])
+        if useIndices:
+        	gkmerDict[gkmer] = index
+    	else:
+        	gkmerDict[gkmer] = weight
+        index += 1
+    weightsFile.close()
+	return gkmerDict    
+    
+'''
 Creates the reverse complement of a given DNA sequence. If a gapped sequence is given,
 the gaps are ignored (they stay as gaps).
 
@@ -159,7 +185,7 @@ importantWords:	A dictionary of gapped k-mers that are deemed "important"
 				are the important gapped k-mers, and the values are the indices
 				associated with them.
 '''
-def getImportantCounts(seq, subLength, numGap, importantWords):
+def featureVector(seq, subLength, numGap, importantWords):
 	counts = np.zeros(len(importantWords), dtype = 'int8')
 	subList = list()
     for i in range(0, len(seq)-subLength+1):

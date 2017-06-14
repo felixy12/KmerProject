@@ -45,8 +45,7 @@ weightList			List of tuples with (l-mer, weight), where the weight for the l-mer
 def generateLmerWeights(subLength, numGaps, gkmerWeightsDict, verbose):
     lmerList = generateLmer([""], subLength)
     
-    if verbose:
-    	print("Calculating l-mer weights.")
+    print("Calculating l-mer weights.")
     weightList = list()
     i = 1
     for lmer in lmerList:
