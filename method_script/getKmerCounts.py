@@ -1,36 +1,42 @@
 import numpy
 import sys
-import gkmerHelpers
-def main():
-    gkmerLength = eval(sys.argv[1])
-    numGaps = eval(sys.argv[1])-eval(sys.argv[2])
-    directory = sys.argv[3]
-    fastaFileName = sys.argv[4]
-    kmerFileName = sys.argv[5]
-    outputFileName = sys.argv[6]
+import gkmer_methods
+
+'''
+Given a fasta file, counts how many times each l-mer appears within the fasta file.
+
+Inputs
+subLength:		Length of the subsequence, l.
+fastaFilePath:	Path to the fasta file to be counted.
+lmerFilePath:	Path to the list of lmers, ranked in order from highest to lowest weight.
+
+Outputs
+lmerCountList:	List of tuples, (l-mer, count). The list is in order by highest l-mer
+				weight to lowest.
+'''
+def lmerCounts(subLength, fastaFilePath, lmerFilePath):
 
     print('Loading in sequences.')
-    seqNameList, seqList = gkmerHelpers.loadFasta(directory+'/'+fastaFileName)
+    seqNameList, seqList = gkmerHelpers.loadFasta(fastaFilePath)
     print('Loading in k-mer weights.')
-    kmerFile = open(directory+'/'+kmerFileName)
+    lmerFile = open(lmerFilePath)
     
-    kmerCountDict = {}
-    kmerOrder = list()
-    for line in kmerFile:
+    lmerCountDict = {}
+    lmerOrder = list()
+    for line in lmerFile:
         splitLine = line.strip().split()
-        kmerOrder.append(splitLine[0])
-        kmerCountDict[splitLine[0]] = 0
+        lmerOrder.append(splitLine[0])
+        lmerCountDict[splitLine[0]] = 0
     for i in range(len(seqList)):
         if((i+1) % 1000 == 0): 
             print('Currently processing sequence: ' + str(i+1))
         seq = seqList[i]
-        kmerList = gkmerHelpers.createSub(seq, gkmerLength)
-        for k in kmerList:
-            kmerCountDict[k]+=1
-        i += 1
-    print('Saving kmer counts to file: ' + directory+'/'+outputFileName)
-    outputFile = open(directory+'/'+outputFileName,'w')
-    for kmer in kmerOrder:
-        outputFile.write(kmer+'\t'+str(kmerCountDict[kmer])+'\n')
-    outputFile.close()
-main()
+        lmerList = list()
+        for i in range(len(seq)-subLength+1):
+        	lmerList.append(seq[i:i+subLength])
+        for l in lmerList:
+            lmerCountDict[l]+=1
+    lmerCountList = list()
+    for lmer in lmerOrder:
+		lmerCountList.append(lmer, lmerCountDict[lmer])
+	return lmerCountList
