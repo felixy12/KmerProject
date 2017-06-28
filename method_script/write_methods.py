@@ -32,7 +32,21 @@ def writeFtMat(outFileName, ftMat, seqNameList)
             ftFile.write("\t"+str(ftMat[seqInd,i]))
         ftFile.write("\n")
     ftFile.close()
-    
+
+'''
+Writes output file for the list generated from generateLmerWeights method.
+Inputs:
+outFileName:	The desired directory+name of the output file.
+weightList:		A list that contains the tuples with all of the Lmers and their weights,
+				sorted by the highest weight first.
+'''
+def writeLmerWeights(outFileName, weightList):
+    outFile = open(outFileName,'w')
+    print("Writing results to file.")
+    for tup in weightList:
+        outFile.write(tup[0]+'\t'+str(tup[1])+'\n')
+    outFile.close()
+        
 '''
 Writes output file for the matrix generated from positionWeights method.
 Inputs:
@@ -52,3 +66,17 @@ def writePW(outFileName, PW, seqNameList):
         outFile.write(row.strip()+'\n')
     print('Done writing. File can be found in ' + outFileName)
     outFile.close()
+
+'''
+Writes output file for the list generated from generateLmerWeights method.
+Inputs:
+outFileName:	The desired directory+name of the output file.
+lmerCountList:	A list that contains the tuples with all of the Lmers and the number
+				of times that lmer appeared in the sequence list, sorted by the highest
+				weight first.
+'''
+def writeLmerCounts(outFileName, lmerCountList):
+    outputFile = open(outFileName,'w')
+    for kmer in kmerOrder:
+        outputFile.write(kmer+'\t'+str(kmerCountDict[kmer])+'\n')
+    outputFile.close()
