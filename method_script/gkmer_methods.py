@@ -96,7 +96,7 @@ seq:		A string containing the DNA sequence
 Outputs
 seq:		A string containing the reverse complement
 '''
-def complement(seq):
+def getComplement(seq):
     seq = seq[::-1]
     seq = seq.replace('A', 'a')
     seq = seq.replace('T', 'A')
