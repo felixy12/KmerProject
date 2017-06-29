@@ -73,7 +73,7 @@ useIndices:	Boolean. If TRUE, index position will be loaded in as values instead
 def loadWeights(fileName, useIndices):
     weightsFile = open(fileName)
     kmerDict = {}
-	index = 0
+    index = 0
     for line in weightsFile:
         splitLine = line.strip().split()
         kmer = splitLine[0]
@@ -84,7 +84,7 @@ def loadWeights(fileName, useIndices):
         	kmerDict[kmer] = weight
         index += 1
     weightsFile.close()
-	return kmerDict    
+    return kmerDict    
     
 '''
 Creates the reverse complement of a given DNA sequence. If a gapped sequence is given,
@@ -122,14 +122,14 @@ gappedList:	A list containing all of the gapped k-mers that can be created
 def gkmers(seq, subLength, numGap):
     subList = list()
     for i in range(0, len(seq)-subLength+1):
-    	subList.append(seq[i: i+subLength])
+        subList.append(seq[i: i+subLength])
     comb = itertools.combinations(range(0,subLength), numGap)
     indList = list(comb)
     gappedList = list()
     for subS in subList:
         for iComb in indList:
-        	tempSubS = subS
-        	for i in iComb:
+            tempSubS = subS
+            for i in iComb:
         		tempSubS = tempSubS[:i]+'-'+tempSubS[i+1:]
             gappedList.append(tempSubS)
     return gappedList
@@ -152,16 +152,16 @@ countDict:	Python dictionary with the gapped k-mer as the key, and the contribut
 def gkmerWeightFromSeq(seq, subLength, numGap, alpha):
     subList = list()
     for i in range(0, len(seq)-subLength+1):
-    	subList.append(seq[i: i+subLength])
+        subList.append(seq[i: i+subLength])
     comb = itertools.combinations(range(0,subLength), numGap)
     indList = list(comb)
     countDict = {}
     for subS in subList:
         for iComb in indList:
-        	gkmer = subS
-        	for i in iComb:
-        		gkmer = gkmer[:i]+'-'+gkmer[i+1:]
-            countDict[gkmer]=countDict.get(kmer,0.0)+1
+            gkmer = subS
+            for i in iComb:
+                gkmer = gkmer[:i]+'-'+gkmer[i+1:]
+            countDict[gkmer]=countDict.get(gkmer,0.0)+1
             
     Values = np.square(countDict.values())    
     normFactor = np.sqrt(np.sum(Values))
@@ -239,7 +239,7 @@ def gkmerWeight(subLength, numGap, seqFilePath, alphaFilePath, verbose):
                 weightDict[key] = weightDict[key] + weightDict[revComp]
                 del weightDict[revComp]
     print("Number of unique words in dictionary after removing reverse compliments: " + str(len(weightDict)))
-	return weightDict
+    return weightDict
 
 '''
 Given the dictionary where the gapped k-mer is the key, and the weight is the value,
@@ -259,10 +259,10 @@ importantWords:	Dictionary that contains the gapped k-mers that were kept after 
 				gapped k-mers position in the feature vector.
 '''
 def filterTopGkmers(weightDict, zScore, positiveFlag):
-	print("Filtering Top Gapped k-mers.")
-	if positiveFlag:
-		print("Flag has been set to only consider positive weights.")
-		
+    print("Filtering Top Gapped k-mers.")
+    if positiveFlag:
+        print("Flag has been set to only consider positive weights.")
+
     Values = np.asarray(weightDict.values(), dtype = 'float')
     std=np.std(Values)
     mean=np.mean(Values)
@@ -297,21 +297,21 @@ importantWords:	A dictionary of gapped k-mers that are deemed "important"
 				associated with them.
 '''
 def featureVector(seq, subLength, numGap, importantWords):
-	counts = np.zeros(len(importantWords), dtype = 'int8')
-	subList = list()
+    counts = np.zeros(len(importantWords), dtype = 'int8')
+    subList = list()
     for i in range(0, len(seq)-subLength+1):
-    	subList.append(seq[i: i+subLength])
+        subList.append(seq[i: i+subLength])
     comb = itertools.combinations(range(0,subLength), numGap)
     indList = list(comb)
     countDict = {}
     for subS in subList:
         for iComb in indList:
-        	gkmer = subS
-        	for i in iComb:
-        		gkmer = gkmer[:i]+'-'+gkmer[i+1:]
-        	if(gkmer in importantWords):
-        		index = importantWords.get(gkmer)
-        		counts[index] = counts[index]+1
+            gkmer = subS
+            for i in iComb:
+                gkmer = gkmer[:i]+'-'+gkmer[i+1:]
+            if(gkmer in importantWords):
+                index = importantWords.get(gkmer)
+                counts[index] = counts[index]+1
     return counts
 
 '''
@@ -444,12 +444,12 @@ def positionWeights(subLength, lmerWeightDict, fastaFilePath):
             start = end
         seq = seqList[i]
         for pos in range(len(seq)-subLength+1):
-        	subseq = seq(pos:pos+subLength)
-        	if subseq in lmerWeightDict:
-        		PW[i,pos] = lmerWeightDict[subseq]
+            subseq = seq[pos:pos+subLength]
+            if subseq in lmerWeightDict:
+        	    PW[i,pos] = lmerWeightDict[subseq]
     totalEnd = time.time()
     print("Done generating. Total time elapsed to process " + str(len(seqList)) + " sequences: " + str(int((totalEnd-totalStart)/60)) + " minutes " + str(int((totalEnd-totalStart)%60)) + " seconds")
-	return PW
+    return PW
 
 '''
 Given a fasta file, counts how many times each l-mer appears within the fasta file.
@@ -482,11 +482,11 @@ def lmerCounts(subLength, fastaFilePath, lmerFilePath):
         seq = seqList[i]
         lmerList = list()
         for i in range(len(seq)-subLength+1):
-        	lmerList.append(seq[i:i+subLength])
+            lmerList.append(seq[i:i+subLength])
         for l in lmerList:
             lmerCountDict[l]+=1
     lmerCountList = list()
     for lmer in lmerOrder:
-		lmerCountList.append(lmer, lmerCountDict[lmer])
-	return lmerCountList
+        lmerCountList.append(lmer, lmerCountDict[lmer])
+    return lmerCountList
    
