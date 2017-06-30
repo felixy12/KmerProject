@@ -69,6 +69,7 @@ fileName:	Path that leads to the file with the words and weights.
 useIndices:	Boolean. If TRUE, index position will be loaded in as values instead
 			of the weights. Indices will be assigned based on order in which they
 			appear in the file.
+Output:     The dictionary with the word as a key, and weights/indices as value.
 '''
 def loadWeights(fileName, useIndices):
     weightsFile = open(fileName)
@@ -279,7 +280,25 @@ def filterTopGkmers(weightDict, zScore, positiveFlag):
             index = index+1
     print("Number of important words: " + str(len(importantWords)))
     return importantWords
-    
+
+'''
+Converts a dictionary of gapped k-mer weights to a dictionary of gapped k-mer indices,
+listed in alphabetical order.
+
+Inputs
+weightDict:     The dictionary of gapped k-mer weights to be converted.
+Outputs
+indexDict:      The dictionary of gapped k-mers with index values.
+''' 
+def convertWeightToIndex(weightDict):
+    Keys = weightDict.keys()
+    Keys.sort()
+    indexDict = {}
+    i = 0
+    for word in Keys:
+        indexDict[word] = i
+        i=i+1
+    return indexDict
 
 '''
 Counts the number of times an important gapped k-mer appears in a sequence. Essentially
@@ -295,6 +314,9 @@ importantWords:	A dictionary of gapped k-mers that are deemed "important"
 				(has z-score above a certain threshold). The keys to the dictionary 
 				are the important gapped k-mers, and the values are the indices
 				associated with them.
+Outputs
+counts:         A vector that contains the number of times each gapped k-mer appeared
+                within the sequence.
 '''
 def featureVector(seq, subLength, numGap, importantWords):
     counts = np.zeros(len(importantWords), dtype = 'int8')
@@ -332,6 +354,8 @@ ftMat:			Feature matrix. Each row denotes a new sequence, and the column values
 				represent the number of times that specific gapped k-mer appears in the
 				sequence. The order for the gapped k-mers matches the index given in
 				importantWords.
+SeqNameList:    The list of sequence names that correspond to the rows in ftMat. To be
+                used when writing out the matrix into a file.
 '''
 def getFeatures(subLength, numGap, seqFilePath, importantWords, verbose):
     seqNameList, seqList = loadFasta(seqFilePath)
@@ -343,10 +367,10 @@ def getFeatures(subLength, numGap, seqFilePath, importantWords, verbose):
     	curSeq = seqInd+1
         ftMat[seqInd,:] = featureVector(seqList[seqInd], subLength, numGap, importantWords)
         if(curSeq%500 == 0 and verbose):
-            print("Currently processing sequence: " + str(seqInd))
+            print("Currently processing sequence: " + str(curSeq))
     end = time.time()
     print("Done. Time Elapsed: " + str(int((end-start)/60)) + " minutes " + str(int((end-start)%60)) + " seconds") 
-    return ftMat
+    return seqNameList, ftMat
    
 '''
 Recursive method that generates all possible l-mers of length l
@@ -360,13 +384,13 @@ lmerList:	Full list of l-mers of length l
 '''
 def generateLmer(lmerList, l):
     NTList = ['T','C','G','A']
-    if(k==0):
+    if(l==0):
         return lmerList
     lmerListNew = list()
     for lmer in lmerList:
         for NT in NTList:
             lmerListNew.append(lmer+NT)
-    return generateLmer(lmerListNew, k-1)
+    return generateLmer(lmerListNew, l-1)
 
 
 '''
@@ -397,9 +421,9 @@ def generateLmerWeights(subLength, numGaps, gkmerWeightsDict, verbose):
         if(i%50000 == 0 and verbose):
             print("Currently on lmer: " + str(i))
         weight = 0
-        kmerComp = getComplement(lmer)
-        gkmerSet = set(gkmers(lmer, lmerLength, numGaps))
-        gkmerSet.update(gkmers(lmerComp, lmerLength, numGaps))
+        lmerComp = getComplement(lmer)
+        gkmerSet = set(gkmers(lmer, subLength, numGaps))
+        gkmerSet.update(gkmers(lmerComp, subLength, numGaps))
         for gkmer in gkmerSet:
             if(gkmer in gkmerWeightsDict):
                 weight += gkmerWeightsDict[gkmer]
@@ -408,6 +432,20 @@ def generateLmerWeights(subLength, numGaps, gkmerWeightsDict, verbose):
         
     weightList = sorted(weightList,key = lambda x:x[1],reverse=True)
     return weightList
+
+'''
+Converts the tuples outputted by generateLmerWeights into a dictionary where the key
+is the 1st element in the tuple, and the value is the 2nd element.
+Inputs
+weightList:     Tuple list to be converted.
+Output
+weightDict:     Converted dictionary.
+'''
+def convertListToDict(weightList):
+    weightDict = {}
+    for element in weightList:
+        weightDict[element[0]] = element[1]
+    return weightDict
 
 '''
 Uses existing defined l-mer weights to assign every l-mer in a fasta file a weight.
@@ -449,7 +487,7 @@ def positionWeights(subLength, lmerWeightDict, fastaFilePath):
         	    PW[i,pos] = lmerWeightDict[subseq]
     totalEnd = time.time()
     print("Done generating. Total time elapsed to process " + str(len(seqList)) + " sequences: " + str(int((totalEnd-totalStart)/60)) + " minutes " + str(int((totalEnd-totalStart)%60)) + " seconds")
-    return PW
+    return seqNameList, PW
 
 '''
 Given a fasta file, counts how many times each l-mer appears within the fasta file.
