@@ -1,4 +1,4 @@
 #!/bin/bash
-#SBATCH --time=2:0:0
+#SBATCH --time=5:0:0
 #SBATCH --nodes=1
 python KmerProject.py

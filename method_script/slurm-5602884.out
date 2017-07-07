@@ -1,0 +1,59 @@
+Step 1: Generating gapped k-mer weights.
+Calculating gapped k-mer weights
+Loading files.
+Found 1000 sequences to process.
+Generating word weights.
+Summary of sequences 1-500
+Time Elapsed: 150.981537104 seconds
+Average length of sequence: 300bp
+Average size of dictionary for each sequence: 56362 entries
+Current number of unique words: 860003
+
+Summary of sequences 501-1000
+Time Elapsed: 151.946447849 seconds
+Average length of sequence: 300bp
+Average size of dictionary for each sequence: 56865 entries
+Current number of unique words: 860160
+
+Done generating. Total time elapsed to process 1000 sequences: 5 minutes 2 seconds
+Number of unique words in dictionary after removing reverse compliments: 430400
+Filtering Top Gapped k-mers.
+Flag has been set to only consider positive weights.
+Number of important words: 18663
+Step 2: Creating feature matrix.
+Creating feature matrix.
+Currently processing sequence: 500
+Currently processing sequence: 1000
+Done. Time Elapsed: 1 minutes 39 seconds
+Step 3: Generating l-mer weights.
+Calculating l-mer weights.
+Currently on lmer: 50000
+Currently on lmer: 100000
+Currently on lmer: 150000
+Currently on lmer: 200000
+Currently on lmer: 250000
+Currently on lmer: 300000
+Currently on lmer: 350000
+Currently on lmer: 400000
+Currently on lmer: 450000
+Currently on lmer: 500000
+Currently on lmer: 550000
+Currently on lmer: 600000
+Currently on lmer: 650000
+Currently on lmer: 700000
+Currently on lmer: 750000
+Currently on lmer: 800000
+Currently on lmer: 850000
+Currently on lmer: 900000
+Currently on lmer: 950000
+Currently on lmer: 1000000
+Writing results to file.
+Step 4: Creating position weights.
+Loading in sequences.
+Number of sequences loaded in: 1000
+Length of longest sequence: 300
+Creating Position Weights.
+Currently process sequence: 1000	 Time Elapsed: 0.21 seconds
+Done generating. Total time elapsed to process 1000 sequences: 0 minutes 0 seconds
+Writing PW matrix to output file.
+Done writing. File can be found in ../testData/position_weights2.out
