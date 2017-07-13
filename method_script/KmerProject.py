@@ -6,7 +6,7 @@ def main():
     print('Step 1: Generating gapped k-mer weights.')
     weightDict = gkmer_methods.gkmerWeight(10,4,'gm12878Data_new/gm12878_shared_ns1_svseq.fa', 'gm12878Data_new/gm12878_shared_ns1_svalpha.out', True)
     importantWords = gkmer_methods.filterTopGkmers(weightDict, 2, True)
-    write_methods.writeGkmerWeights('gm12878Data_new/gm12878_top_gkmer_weights2.out', importantWords, weightDict)
+    write_methods.writeGkmerWeights('gm12878Data_new/gm12878_top_gkmer_weights2.out', importantWords)
     print('Step 2: Creating feature matrix.')
     importantWordsIndex = gkmer_methods.convertWeightToIndex(importantWords)
     seqNameList, ftMat = gkmer_methods.getFeatures(10, 4, 'gm12878Data_new/gm12878_shared.fa', importantWordsIndex, True)

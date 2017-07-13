@@ -256,8 +256,7 @@ positiveFlag:	Boolean. If TRUE, only positive zScores above the threshold are ke
 				
 Outputs
 importantWords:	Dictionary that contains the gapped k-mers that were kept after filtering
-				as keys, and an index as their value. These indices will denote the 
-				gapped k-mers position in the feature vector.
+				as keys, and their weights as the values. 
 '''
 def filterTopGkmers(weightDict, zScore, positiveFlag):
     print("Filtering Top Gapped k-mers.")
@@ -276,14 +275,15 @@ def filterTopGkmers(weightDict, zScore, positiveFlag):
         if(not positiveFlag):
             z = abs(z)
         if z > zScore:
-            importantWords[key] = index
+            importantWords[key] = weightDict.get(key)
             index = index+1
     print("Number of important words: " + str(len(importantWords)))
     return importantWords
 
 '''
 Converts a dictionary of gapped k-mer weights to a dictionary of gapped k-mer indices,
-listed in alphabetical order.
+listed in alphabetical order. These indices will be used to denote the feature position
+when getting the feature vector for each sequence.
 
 Inputs
 weightDict:     The dictionary of gapped k-mer weights to be converted.
